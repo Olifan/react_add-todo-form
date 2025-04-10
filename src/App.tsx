@@ -8,16 +8,19 @@ import { TodoList } from './components/TodoList';
 
 import { Todo } from './components/TodoInfo';
 
+const defaultUser = {
+  id: 0,
+  name: 'Unknown ',
+  username: 'unknown ',
+  email: 'unknown@example.com',
+};
+
 export const App = () => {
   const [todos, setTodos] = useState<Todo[]>(() =>
     todosFromServer.map(todo => ({
       ...todo,
-      user: usersFromServer.find(user => user.id === todo.userId) || {
-        id: 0,
-        name: 'Unknown ',
-        username: 'unknown ',
-        email: 'unknown@example.com',
-      },
+      user:
+        usersFromServer.find(user => user.id === todo.userId) || defaultUser,
     })),
   );
   const [title, setTitle] = useState('');
@@ -39,16 +42,11 @@ export const App = () => {
     }
 
     const newTodo: Todo = {
-      id: Math.max(0, ...todos.map(todo => todo.id)) + 1,
+      id: todos.length + 1,
       title: title.trim(),
       userId,
       completed: false,
-      user: usersFromServer.find(user => user.id === userId) || {
-        id: 0,
-        name: '',
-        username: '',
-        email: '',
-      },
+      user: usersFromServer.find(user => user.id === userId) || defaultUser,
     };
 
     setTodos(prev => [...prev, newTodo]);
@@ -108,31 +106,6 @@ export const App = () => {
       </form>
 
       <section className="TodoList">
-        {/* <article data-id="1" className="TodoInfo TodoInfo--completed">
-          <h2 className="TodoInfo__title">delectus aut autem</h2>
-
-          <a className="UserInfo" href="mailto:Sincere@april.biz">
-            Leanne Graham
-          </a>
-        </article>
-
-        <article data-id="15" className="TodoInfo TodoInfo--completed">
-          <h2 className="TodoInfo__title">delectus aut autem</h2>
-
-          <a className="UserInfo" href="mailto:Sincere@april.biz">
-            Leanne Graham
-          </a>
-        </article>
-
-        <article data-id="2" className="TodoInfo">
-          <h2 className="TodoInfo__title">
-            quis ut nam facilis et officia qui
-          </h2>
-
-          <a className="UserInfo" href="mailto:Julianne.OConner@kory.org">
-            Patricia Lebsack
-          </a>
-        </article> */}
         <TodoList todos={todos} />
       </section>
     </div>
